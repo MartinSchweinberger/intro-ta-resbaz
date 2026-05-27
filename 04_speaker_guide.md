@@ -4,7 +4,7 @@ output:
 ---
 # ResBaz Brisbane 2026 — Workshop Speaker Guide
 ## Introduction to Computational Text Analytics
-### Delivered by: [Your Name]
+### Delivered by: Sam Hames
 ### Materials: github.com/MartinSchweinberger/intro-ta-resbaz
 
 ---
