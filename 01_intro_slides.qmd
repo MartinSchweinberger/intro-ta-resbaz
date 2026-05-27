@@ -1,0 +1,504 @@
+---
+title: "Introduction to Computational Text Analytics"
+subtitle: "Research Bazaar Brisbane 2026"
+author: "Sam Hames and Martin Schweinberger"
+institute: "LADAL · Language Technology and Data Analysis Laboratory · University of Queensland"
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    show-slide-number: speaker
+    progress: true
+    logo: "https://ladal.edu.au/images/uq1.webp"
+    footer: "ResBaz Brisbane 2026 · ladal.edu.au"
+    transition: slide
+    background-transition: fade
+    highlight-style: github
+    code-block-bg: true
+    code-block-border-left: "#51247A"
+    chalkboard: false
+    controls: true
+    preview-links: false
+    width: 1280
+    height: 720
+    margin: 0.05
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## {.center background-color="#51247A"}
+
+::: {style="text-align: center; color: white;"}
+### Do you have more text than you know what to do with?
+
+::: {.fragment}
+Are you doing the same thing over and over and feeling like you're not using your time efficiently?
+:::
+
+::: {.fragment}
+Are you worried about missing the forest for the trees?
+:::
+
+::: {.fragment style="font-size: 1.4em; margin-top: 0.8em; font-weight: bold;"}
+**This workshop is for you.**
+:::
+:::
+
+---
+
+## Today's Plan {.center}
+
+::: {.columns}
+::: {.column width="50%"}
+### Part 1 · 45 min
+**Concepts & Foundations**
+
+- What *is* computational text analysis?
+- Why does it matter?
+- The pipeline: from raw text to insight
+- Core concepts: concordancing, collocations, keywords
+- LADAL: your long-term resource
+
+:::
+::: {.column width="50%"}
+### Part 2 · 60 min
+**Hands-on Practice**
+
+- **Track A (R users):** Live demo + guided notebook with COOEE corpus
+- **Track B (no R):** LADAL browser tools + guided exercises
+
+:::
+:::
+
+::: {.callout-note appearance="minimal"}
+All materials: **github.com/MartinSchweinberger/intro-ta-resbaz**
+:::
+
+---
+
+## {.center background-color="#f5f0fa"}
+
+::: {style="text-align: center;"}
+# Part 1
+## What Is Computational Text Analysis, and Why Does It Matter?
+:::
+
+---
+
+## Text Is Everywhere — And Growing {background-color="#fafafa"}
+
+::: {.columns}
+::: {.column width="60%"}
+Research today drowns in text:
+
+- Interview transcripts
+- Open-ended survey responses  
+- Historical documents  
+- Government reports  
+- Social media data  
+- News archives  
+- Academic papers
+
+**The volume of text has outpaced our ability to read it.**
+:::
+::: {.column width="40%"}
+::: {.fragment}
+```
+Manual reading: 
+~250 words/min
+
+50,000 newspaper articles:
+~3,333 hours of reading
+
+Computational analysis:
+~seconds
+```
+:::
+:::
+:::
+
+::: {.fragment}
+> Computational Text Analysis = using computers to find patterns, relationships, and insights in large collections of text.
+:::
+
+---
+
+## What Text Analysis Is — And Is Not {background-color="#fafafa"}
+
+::: {.columns}
+::: {.column width="48%"}
+### ✅ What it *is*
+- A set of **tools** to assist human interpretation
+- A way to **scale** analysis across many texts
+- A method to find patterns **systematically** and **reproducibly**
+- Complementary to close reading
+:::
+::: {.column width="48%"}
+### ❌ What it is *not*
+- A replacement for reading or interpretation
+- Always better than manual analysis
+- Free of researcher decisions
+- Objective or neutral
+:::
+:::
+
+::: {.fragment .callout-important appearance="minimal"}
+**Computational methods produce patterns. Researchers produce meaning.**
+:::
+
+---
+
+## Four Related Fields {background-color="#fafafa"}
+
+| Field | Primary Home | Key Goal |
+|---|---|---|
+| **Text Analysis (TA)** | Humanities, Social Science | Understand texts & phenomena |
+| **Corpus Linguistics (CL)** | Linguistics | Understand language use empirically |
+| **Natural Language Processing (NLP)** | Computer Science / AI | *Build* language technology |
+| **Text Mining (TM)** | Data Science / Industry | Extract info at scale, minimal human input |
+
+::: {.fragment}
+::: {.callout-tip appearance="minimal"}
+Today we're doing **TA** and **CL** — using computational tools to answer research questions, with human interpretation of results at every step.
+:::
+:::
+
+---
+
+## Why Now? Four Structural Changes {background-color="#fafafa"}
+
+::: {.incremental}
+1. **Digitisation of archives** — millions of historical documents, letters, newspapers now machine-readable
+2. **Born-digital text** — social media, emails, forums already in computational form
+3. **Better methods** — NLP, machine learning, statistical tools now mature and accessible
+4. **Lower barriers** — R, Python, and tools like LADAL mean researchers don't need computer science degrees
+:::
+
+::: {.fragment}
+::: {.callout-note appearance="minimal"}
+The COOEE corpus (letters of early immigrants to Australia, 1788–1900) is a perfect example of digitised historical archive — now available for computational analysis.
+:::
+:::
+
+---
+
+## {.center background-color="#f5f0fa"}
+
+::: {style="text-align: center;"}
+# The Text Analysis Pipeline
+## From raw text to insight in 7 stages
+:::
+
+---
+
+## The 7-Stage Pipeline {background-color="#fafafa"}
+
+```{r}
+#| fig-height: 3
+library(ggplot2)
+
+stages <- data.frame(
+  x = 1:7,
+  y = rep(1, 7),
+  label = c("1\nResearch\nQuestion", "2\nData &\nCorpus", 
+            "3\nPre-\nprocessing", "4\nAnnotation\n(optional)", 
+            "5\nAnalysis", "6\nInterpret &\nValidate", "7\nReport &\nShare"),
+  color = c("#51247A", "#7A3DA8", "#9E6BC4", "#C4A0E0",
+            "#00A2C7", "#007A99", "#004F66")
+)
+
+ggplot(stages, aes(x = x, y = y)) +
+  geom_tile(aes(fill = color), width = 0.88, height = 0.6, show.legend = FALSE) +
+  geom_text(aes(label = label), color = "white", size = 3.2, fontface = "bold", lineheight = 0.9) +
+  geom_segment(data = data.frame(x = 1:6 + 0.46, xend = 1:6 + 0.54, y = 1, yend = 1),
+               aes(x = x, y = y, xend = xend, yend = yend),
+               arrow = arrow(length = unit(0.15, "cm"), type = "closed"),
+               linewidth = 1.2, color = "#333333") +
+  scale_fill_identity() +
+  scale_x_continuous(limits = c(0.5, 7.5)) +
+  scale_y_continuous(limits = c(0.5, 1.5)) +
+  theme_void() +
+  theme(plot.background = element_rect(fill = "transparent", color = NA))
+```
+
+::: {.fragment}
+::: {.columns}
+::: {.column width="50%"}
+**Today's workshop focuses on stages 3 & 5:**
+pre-processing and three core analysis methods.
+:::
+::: {.column width="50%"}
+**The rest of the pipeline** is covered in depth at [ladal.edu.au/tutorials](https://ladal.edu.au/tutorials.html)
+:::
+:::
+:::
+
+---
+
+## Stage 1: Start With a Question {background-color="#fafafa"}
+
+Good TA research questions come in several types:
+
+| Type | Example |
+|---|---|
+| **Descriptive** | What topics are most common in these letters? |
+| **Comparative** | How does language in early vs. late COOEE letters differ? |
+| **Diachronic** | How has use of word *X* changed over time? |
+| **Relational** | Which words tend to appear together? |
+
+::: {.fragment}
+::: {.callout-warning appearance="minimal"}
+**The single biggest mistake in text analysis:** running methods first and asking what they mean second. Methods serve questions — not the other way around.
+:::
+:::
+
+---
+
+## Stage 2: The Corpus {background-color="#fafafa"}
+
+A **corpus** is not just "a bunch of texts." It is a principled, documented collection designed to address a specific question.
+
+::: {.columns}
+::: {.column width="50%"}
+**Design decisions:**
+- Representativeness  
+- Balance across groups/periods  
+- Size (bigger ≠ always better)  
+- Metadata (who wrote it, when, where)  
+- Rights and licensing
+:::
+::: {.column width="50%"}
+**COOEE corpus:**
+- 319 letters, 1788–1900
+- Written by early immigrants to Australia  
+- Metadata: author, gender, origin, year, place  
+- Perfect for historical language analysis  
+- [Open access via LADAL](https://ladal.edu.au)
+:::
+:::
+
+---
+
+## Stage 3: Pre-processing {background-color="#fafafa"}
+
+Raw text is messy. Before analysis, we clean and normalise it.
+
+::: {.columns}
+::: {.column width="55%"}
+**Common steps:**
+
+- Encoding normalisation (UTF-8)
+- Tokenisation (splitting into words)
+- Lowercasing
+- Removing noise (XML tags, URLs, numbers)
+- Stopword removal (for frequency analyses)
+- Lemmatisation / stemming
+:::
+::: {.column width="45%"}
+::: {.callout-important appearance="minimal"}
+**Pre-processing decisions affect results.** Removing stopwords before a topic model gives very different topics than keeping them.
+
+There are no universally correct choices — the right pre-processing depends on the question.
+:::
+:::
+:::
+
+---
+
+## Stage 5: Three Core Methods {.center background-color="#51247A"}
+
+::: {style="color: white; text-align: center;"}
+We'll use all three in today's workshop.
+
+### Concordancing → Collocations → Keywords
+:::
+
+---
+
+## Method 1: Concordancing {background-color="#fafafa"}
+
+**What it is:** Finding every instance of a word or phrase in a corpus, displayed with surrounding context (KWIC = Keyword In Context).
+
+```
+                    ***KWIC: "land"***
+...the ship arrived at the ... LAND ... after many weeks at sea...
+...settlers claimed the rich ... LAND ... near the river...
+...he described the new ... LAND ... as fertile but harsh...
+...grants of ... LAND ... were promised to free settlers...
+```
+
+::: {.fragment}
+**What it tells you:** How a word is actually used in context — what precedes and follows it, how its meaning varies across the corpus.
+
+**LADAL tool:** WordFinder (Shiny) · Concordance Explorer (Jupyter)
+:::
+
+---
+
+## Method 2: Collocation Analysis {background-color="#fafafa"}
+
+**What it is:** Finding which words appear together *more often than chance* — statistically significant co-occurrence.
+
+::: {.columns}
+::: {.column width="55%"}
+Not just "which words appear near X" but "which words appear near X *more than you'd expect* given how common both words are."
+
+**Key measures:**
+- Mutual Information (MI) — favours rare but strongly associated pairs
+- Log-likelihood (LL) — favours frequent, reliable associations
+- t-score — balances frequency and association
+:::
+::: {.column width="45%"}
+**Example: collocates of "land" in COOEE**
+
+| Word | MI | Meaning |
+|---|---|---|
+| *grant* | high | land grants |
+| *fertile* | high | land quality |
+| *free* | med | free land |
+:::
+:::
+
+---
+
+## Method 3: Keyword Analysis {background-color="#fafafa"}
+
+**What it is:** Comparing two corpora to find words that are *statistically distinctive* in one compared to the other (keyness).
+
+::: {.columns}
+::: {.column width="55%"}
+**Logic:** A word is "key" if it appears much more (or less) often in your target corpus than you'd expect based on a reference corpus.
+
+**Today:** COOEE letters vs. BROWN corpus (standard American English)
+
+**Key measures:**
+- G² (log-likelihood ratio) — most robust  
+- Chi-squared  
+- Log ratio — most interpretable
+:::
+::: {.column width="45%"}
+::: {.callout-tip appearance="minimal"}
+Keywords reveal what makes a corpus *distinctive* — not just what is frequent in it. Frequent words are often just common English words. Distinctive words are what's characteristic of your specific text collection.
+:::
+:::
+:::
+
+---
+
+## Core Terminology: Quick Reference {background-color="#fafafa"}
+
+| Term | Definition |
+|---|---|
+| **Token** | Individual word instance (counts repetitions: *the* = 3 tokens if it appears 3×) |
+| **Type** | Unique word form (counts without repetition: *the* = 1 type) |
+| **Lemma** | Base/dictionary form: *running, ran, runs* → **RUN** |
+| **Type-Token Ratio** | Types ÷ Tokens — a measure of vocabulary diversity |
+| **Document-Term Matrix** | Table: rows = documents, columns = words, cells = counts |
+| **Stopwords** | High-frequency function words (*the, and, of*) often removed before frequency analysis |
+
+---
+
+## Types vs. Tokens vs. Lemmas: Illustrated {background-color="#fafafa"}
+
+**Sentence:** *"The settlers cleared the land and built on the land."*
+
+::: {.columns}
+::: {.column width="33%"}
+**Tokens (10)**  
+The · settlers · cleared  
+the · land · and · built  
+on · the · land
+:::
+::: {.column width="33%"}
+**Types (8)**  
+The · settlers · cleared  
+land · and · built  
+on *(the appears 3× = 1 type)*
+:::
+::: {.column width="33%"}
+**Lemmas**  
+the → THE  
+settlers → SETTLER  
+cleared → CLEAR  
+built → BUILD  
+land → LAND
+:::
+:::
+
+::: {.fragment}
+**Type-Token Ratio = 8 ÷ 10 = 0.80** — relatively high diversity for a short sentence.
+:::
+
+---
+
+## LADAL: Your Long-Term Resource {background-color="#fafafa"}
+
+::: {.columns}
+::: {.column width="55%"}
+**[ladal.edu.au](https://ladal.edu.au)**
+
+- 60+ free tutorials: Data Science Basics → R Basics → Text Analytics
+- Browser tools: no installation required
+- Quarto notebooks: run, modify, extend
+- From beginner to transformer models (BERT, LLMs)
+- Open access, citable, DOI-registered
+
+**Today's methods each have a dedicated deep-dive tutorial:**  
+Concordancing · Collocations · Keywords
+:::
+::: {.column width="45%"}
+**LADAL Tools (no R needed):**
+
+| Tool | What it does |
+|---|---|
+| WordFinder | KWIC concordancing |
+| CollocationCalculator | MI, LL, t-score |
+| KeywordExtractor | Keyness vs. reference |
+| SentimentExplorer | Polarity + emotions |
+| TextCleaner | Remove noise/tags |
+| TopicDetector | LDA topic models |
+:::
+:::
+
+---
+
+## {.center background-color="#51247A"}
+
+::: {style="color: white; text-align: center;"}
+# Questions before we start?
+
+### Part 2 begins in a moment.
+
+**Track A (R users):** open RStudio  
+**Track B (no R):** open a browser
+
+**Materials:** github.com/MartinSchweinberger/intro-ta-resbaz
+:::
+
+---
+
+## Part 2 Overview {background-color="#fafafa"}
+
+::: {.columns}
+::: {.column width="50%"}
+### Track A: R Users
+1. Fork/clone the repo *(5 min)*
+2. Open `02_r_notebook.qmd`
+3. Live demo: project setup + mini analysis
+4. Work through the notebook tasks
+5. Pointer to LADAL tutorials for going further
+:::
+::: {.column width="50%"}
+### Track B: No R
+1. Download the handout or open `03_tools_notebook.qmd`
+2. Navigate to [ladal.edu.au/tools.html](https://ladal.edu.au/tools.html)
+3. Work through guided exercises with provided data
+4. Pointer to LADAL tools for going further
+:::
+:::
+
+::: {.callout-tip appearance="minimal"}
+Both tracks use the same COOEE corpus data. The questions you answer will be the same — only the tools differ.
+:::

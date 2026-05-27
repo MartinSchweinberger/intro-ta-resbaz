@@ -1,0 +1,427 @@
+---
+title: "Introduction to Computational Text Analytics"
+subtitle: "Track B — No R Required · ResBaz Brisbane 2026"
+author: "Martin Schweinberger (LADAL, University of Queensland)"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-title: "Contents"
+    number-sections: true
+    theme: cosmo
+    embed-resources: true
+execute:
+  echo: false
+---
+
+# Welcome {.unnumbered}
+
+This notebook guides you through hands-on text analysis using **browser-based tools** — no R or programming required.
+
+You will use the **COOEE corpus**: letters written by early immigrants to Australia (1788–1900). Sample letters are provided in the `data/COOEE_samples/` folder of the workshop repo.
+
+::: {.callout-tip}
+## How to get the sample data
+All sample files are in **github.com/MartinSchweinberger/intro-ta-resbaz** → `data/COOEE_samples/`
+
+Click the green **Code** button → **Download ZIP**, then unzip to your desktop.  
+The sample data is in the `data/COOEE_samples/` subfolder.
+:::
+
+You will use these LADAL tools today:
+
+| Tool | URL | What it does |
+|---|---|---|
+| **TextCleaner** | [Launch (Shiny)](https://binderhub.rc.nectar.org.au/v2/gh/SLCLADAL/tools-env/main?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252FSLCLADAL%252Ftools%26urlpath%3Dshiny%252Ftools%252Ftextcleaner%252F%26branch%3Dmain) | Clean messy text |
+| **WordFinder** | [Launch (Shiny)](https://binderhub.rc.nectar.org.au/v2/gh/SLCLADAL/tools-env/main?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252FSLCLADAL%252Ftools%26urlpath%3Dshiny%252Ftools%252Fwordfinder%252F%26branch%3Dmain) | KWIC concordancing |
+| **CollocationCalculator** | [Launch (Shiny)](https://binderhub.rc.nectar.org.au/v2/gh/SLCLADAL/tools-env/main?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252FSLCLADAL%252Ftools%26urlpath%3Dshiny%252Ftools%252Fcollocationcalculator%252F%26branch%3Dmain) | Collocation statistics |
+| **KeywordExtractor** | [Launch (Shiny)](https://binderhub.rc.nectar.org.au/v2/gh/SLCLADAL/tools-env/main?urlpath=git-pull%3Frepo%3Dhttps%253A%252F%252Fgithub.com%252FSLCLADAL%252Ftools%26urlpath%3Dshiny%252Ftools%252Fkeywordextractor%252F%26branch%3Dmain) | Keyword / keyness analysis |
+
+::: {.callout-note}
+## Login reminder
+Shiny tools require an Australian university AAF/Tuakiri login. If you encounter login issues, use the **Jupyter/MyBinder** versions linked at [ladal.edu.au/tools.html](https://ladal.edu.au/tools.html) — no login required.
+:::
+
+---
+
+# The Data: COOEE Sample Letters
+
+The sample folder contains **20 letters** from the COOEE corpus, selected to cover the full time range and a variety of authors.
+
+::: {.callout-note}
+## About the COOEE corpus
+COOEE = *Corpus of Oz Early English* — letters written by immigrants to Australia, 1788–1900. Topics include the voyage to Australia, life in the colonies, land, family, work, hardship, and longing for home. The corpus is ideal for studying how language reflected the colonial experience.
+:::
+
+Here is a summary of the sample letters:
+
+| File | Author | Year | Origin | Place Writing |
+|---|---|---|---|---|
+| 1-001.txt | Philip, Arthur | 1788 | GB | NSW |
+| 1-010.txt | Bowman, James | 1800 | GB | NSW |
+| 1-020.txt | Macquarie, Lachlan | 1810 | GB | NSW |
+| ... | ... | ... | ... | ... |
+
+*Full metadata is in `data/COOEE_metadata.xlsx`*
+
+---
+
+# Step 1: Clean the Text
+
+Before analysis, we need to remove noise from the letters — digitisation artefacts, header lines, and unwanted formatting.
+
+## What is the TextCleaner?
+
+The TextCleaner is a point-and-click tool that lets you upload text files and apply cleaning operations — removing tags, replacing patterns, stripping punctuation — and download the results.
+
+## How to Use TextCleaner
+
+1. **Launch the tool** using the link in the table above (takes 1–3 minutes to load)
+2. **Upload files**: click "Browse" and select all `.txt` files from `data/COOEE_samples/`
+3. **Apply cleaning operations:**
+   - ✅ Remove XML/HTML tags
+   - ✅ Remove extra whitespace
+   - ✅ Convert to lowercase (for analysis — keep originals for reading)
+4. **Preview** the cleaned text in the tool
+5. **Download** the cleaned files
+
+---
+
+## 🔧 Exercise 1: Clean and Inspect {.unnumbered}
+
+::: {.callout-caution icon="false"}
+## Exercise 1
+
+**A. Before cleaning:** Open `1-001.txt` in a text editor. Note 3 things that look like noise or formatting artefacts that are not part of the letter content.
+
+Write them here:
+
+1. _______________________________________________
+2. _______________________________________________
+3. _______________________________________________
+
+**B. After cleaning:** Use TextCleaner to clean the files. Look at the preview.
+
+- Did the tool remove the noise you identified?  `YES / NO`
+- What is *still* present that you would want to remove?  
+  _______________________________________________
+
+**C. Think about this:**  
+If you were studying the *vocabulary* of these letters, why would lowercasing matter?  
+*(Hint: how many times does "The" appear vs "the"? Are they the same word?)*
+
+_______________________________________________
+:::
+
+---
+
+# Step 2: Concordancing with WordFinder
+
+Concordancing shows you every occurrence of a word in context (KWIC = Keyword In Context). This is the most fundamental operation in corpus linguistics.
+
+## How to Use WordFinder
+
+1. **Launch WordFinder** using the link in the table above
+2. **Upload** your cleaned text files
+3. **Enter a search term** in the search box (e.g., `land`)
+4. **Set context window** to 5–7 words on each side
+5. **Browse and sort** results — try sorting by the word immediately to the left or right of your search term
+
+---
+
+## 🔧 Exercise 2: Concordance "land" {.unnumbered}
+
+::: {.callout-caution icon="false"}
+## Exercise 2
+
+**A. Search for `land` in WordFinder.**
+
+How many occurrences do you find? _______________
+
+**B. Scan the concordance lines. Identify 3 different contexts in which "land" appears:**
+
+| Context | Example concordance line (paraphrase OK) |
+|---|---|
+| 1. | |
+| 2. | |
+| 3. | |
+
+**C. Sort the concordance by the word immediately *after* "land" (the R1 column).**
+
+What are the 3 most common words that follow "land"?
+
+1. _______________ 
+2. _______________
+3. _______________
+
+What do these words suggest about how land was discussed in these letters?  
+_______________________________________________
+
+**D. Now search for `land*` (with an asterisk as a wildcard).**  
+This matches `land`, `lands`, `landing`, `landed`, `landowner`, etc.
+
+What new forms appear that you didn't see with just `land`?  
+_______________________________________________  
+Does this change your interpretation of the results?  
+_______________________________________________
+:::
+
+---
+
+## 🔧 Exercise 3: Concordance Your Own Term {.unnumbered}
+
+::: {.callout-caution icon="false"}
+## Exercise 3
+
+Choose **one** word from the list below, or pick your own:
+
+`home` · `ship` · `family` · `work` · `money` · `farm` · `England` · `colony`
+
+**My chosen word:** _______________
+
+**A. Run the concordance. How many hits?** _______________
+
+**B. What are the 3 most common contexts (what precedes and follows your word)?**
+
+| Left context | WORD | Right context |
+|---|---|---|
+| | | |
+| | | |
+| | | |
+
+**C. Does the meaning of the word vary across different letters or time periods?**  
+*(Hint: look at the document name in the left-most column — earlier letters have lower numbers)*
+
+_______________________________________________
+
+**D. Formulate a research question that your concordance results suggest:**  
+*e.g., "How did attitudes toward [your word] change over time in the COOEE letters?"*
+
+_______________________________________________
+:::
+
+---
+
+# Step 3: Collocation Analysis
+
+A collocation analysis finds which words appear together *more often than chance*. This is different from just finding frequent words — it identifies statistically significant associations.
+
+## How to Use CollocationCalculator
+
+1. **Launch CollocationCalculator** using the link in the table above
+2. **Upload** your cleaned text files
+3. **Set the node word** (the word you want to find collocates of, e.g., `land`)
+4. **Set the window size** to 5 (5 words either side)
+5. **Select association measures**: MI (Mutual Information), t-score, log-likelihood
+6. **Sort by MI** to see the most strongly associated pairs
+
+::: {.callout-note}
+## What do the association measures mean?
+
+| Measure | Favours | Best for |
+|---|---|---|
+| **MI (Mutual Information)** | Rare but strongly linked pairs | Finding specific, distinctive associations |
+| **t-score** | Frequent, reliable pairs | Finding common, stable collocations |
+| **Log-likelihood** | Strong associations overall | General collocate discovery |
+
+There is no single "correct" measure — each tells you something slightly different.
+:::
+
+---
+
+## 🔧 Exercise 4: Find Collocates of "land" {.unnumbered}
+
+::: {.callout-caution icon="false"}
+## Exercise 4
+
+**A. Set the node word to `land`, window size = 5. Run the analysis.**
+
+**B. List the top 5 collocates sorted by MI:**
+
+| Rank | Word | MI score |
+|---|---|---|
+| 1 | | |
+| 2 | | |
+| 3 | | |
+| 4 | | |
+| 5 | | |
+
+**C. Now sort by t-score. Do the top 5 change?**  `YES / NO`
+
+List the new top 5 if different:  
+_______________________________________________
+
+**D. What do the MI collocates tell you about how "land" was discussed?**  
+*(Hint: do you see patterns around land grants, land quality, owning land?)*
+
+_______________________________________________
+
+**E. Pick one of the collocates and go back to WordFinder to search for the phrase.**  
+*(e.g., if "grant" is a collocate, search for "land grant")*
+
+What do the concordance lines reveal about this phrase in context?  
+_______________________________________________
+:::
+
+---
+
+## 🔧 Exercise 5: Explore Another Node Word {.unnumbered}
+
+::: {.callout-caution icon="false"}
+## Exercise 5
+
+Choose a different node word: `home`, `wife`, `work`, `ship`, or your own choice.
+
+**My node word:** _______________
+
+**Top 5 collocates (by MI):**
+
+| Rank | Word | MI score |
+|---|---|---|
+| 1 | | |
+| 2 | | |
+| 3 | | |
+| 4 | | |
+| 5 | | |
+
+**What do the collocates reveal about how this word was used in the letters?**
+
+_______________________________________________
+
+**Compare to a modern usage of this word. What is similar? What is different?**
+
+_______________________________________________
+:::
+
+---
+
+# Step 4: Keyword Analysis
+
+Keyword analysis identifies which words are *statistically distinctive* in the COOEE letters compared to a reference corpus (BROWN corpus = standard American English).
+
+A keyword is not just a frequent word — it is a word that appears *significantly more often* in your corpus than you would expect based on general English usage.
+
+## How to Use KeywordExtractor
+
+1. **Launch KeywordExtractor** using the link above
+2. **Upload COOEE samples** as your **target corpus**
+3. **Upload BROWN samples** (from `data/BROWN_samples/`) as your **reference corpus**
+4. **Select measure**: Log-likelihood (G²) is the most robust
+5. **Run the analysis** and view the keyword list
+
+---
+
+## 🔧 Exercise 6: Find COOEE Keywords {.unnumbered}
+
+::: {.callout-caution icon="false"}
+## Exercise 6
+
+**A. Run the keyword analysis (COOEE vs. BROWN). List the top 10 keywords:**
+
+| Rank | Word | Keyness score |
+|---|---|---|
+| 1 | | |
+| 2 | | |
+| 3 | | |
+| 4 | | |
+| 5 | | |
+| 6 | | |
+| 7 | | |
+| 8 | | |
+| 9 | | |
+| 10 | | |
+
+**B. Look at the keyword list. Can you group the keywords into themes?**
+
+*e.g., Geography/place · Family/relationships · Land/agriculture · Colonial life*
+
+| Theme | Keywords in this theme |
+|---|---|
+| | |
+| | |
+| | |
+
+**C. What does this keyword profile tell you about the COOEE letters as a whole?**  
+*(What topics and concerns were central to early immigrants' writing?)*
+
+_______________________________________________
+
+**D. Are there any keywords that *surprise* you? Why?**
+
+_______________________________________________
+
+**E. What limitations might there be in this comparison?**  
+*(Hint: think about the time period, genre, and variety of English in each corpus)*
+
+_______________________________________________
+:::
+
+---
+
+# Reflection and Discussion
+
+::: {.callout-caution icon="false"}
+## Final Reflection Exercise
+
+Take 5 minutes to reflect, then share with a partner.
+
+**1. Which method (concordancing / collocations / keywords) gave you the most insight into the COOEE letters? Why?**
+
+_______________________________________________
+
+**2. Could you have found these patterns by reading the letters manually? What would that have required?**
+
+_______________________________________________
+
+**3. How might you apply one of these methods to your own research?**
+
+*Think about your own data (interviews, documents, survey responses, archive material...)*
+
+My research data: _______________________________________________
+
+Method I could apply: _______________________________________________
+
+Question it could answer: _______________________________________________
+
+**4. What is one limitation of computational text analysis that you would need to keep in mind?**
+
+_______________________________________________
+:::
+
+---
+
+# Where to Go Next
+
+You've used three core text analysis tools. There is much more available:
+
+## LADAL Tools (browser, no coding)
+
+Go to [ladal.edu.au/tools.html](https://ladal.edu.au/tools.html)
+
+| Tool | What it does |
+|---|---|
+| **TextCleaner** | Remove noise, tags, and patterns |
+| **WordFinder** | KWIC concordancing |
+| **CollocationCalculator** | MI, t-score, log-likelihood |
+| **KeywordExtractor** | Keyness vs. reference corpus |
+| **SentimentExplorer** | Polarity + 8 NRC emotion categories |
+| **TopicDetector** | LDA topic modelling |
+| **WordWebber** | Word co-occurrence networks |
+| **POSTagger** | Part-of-speech tagging in 65+ languages |
+
+## LADAL Tutorials (learn R for text analysis)
+
+If you want to move to coding, start here:
+
+1. [Why R?](https://ladal.edu.au/tutorials/why_r/why_r.html)
+2. [Getting Started with R](https://ladal.edu.au/tutorials/r_intro/r_intro.html)
+3. [Introduction to Text Analysis: Concepts](https://ladal.edu.au/tutorials/text_analysis_intro/text_analysis_intro.html)
+4. [Introduction to Text Analysis: Practical](https://ladal.edu.au/tutorials/textanalysis/textanalysis.html)
+
+::: {.callout-tip}
+## Get in Touch
+Questions about LADAL or computational text analysis at UQ?  
+Email: **ladal@uq.edu.au**  
+Website: **ladal.edu.au**
+:::
