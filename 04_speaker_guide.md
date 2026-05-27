@@ -1,3 +1,7 @@
+---
+output:
+  html_document: default
+---
 # ResBaz Brisbane 2026 — Workshop Speaker Guide
 ## Introduction to Computational Text Analytics
 ### Delivered by: [Your Name]
