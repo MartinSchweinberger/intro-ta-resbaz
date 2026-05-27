@@ -25,9 +25,13 @@ output:
 ## Before the Workshop
 
 ### Room setup
+
 - Projector connected and tested with slides open
+
 - Your laptop has R ≥ 4.3 and RStudio installed
+
 - You have run the demo notebook (`02_r_notebook.qmd`) end-to-end at least once before the day
+
 - The GitHub repo is public and all data is in place
 
 ### Test the LADAL tools (day before)

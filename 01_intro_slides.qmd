@@ -21,7 +21,7 @@ format:
     preview-links: false
     width: 1280
     height: 720
-    margin: 0.05
+    margin: 0.1
 execute:
   echo: false
   warning: false
@@ -263,18 +263,28 @@ A **corpus** is not just "a bunch of texts." It is a principled, documented coll
 ::: {.columns}
 ::: {.column width="50%"}
 **Design decisions:**
+
 - Representativeness  
+
 - Balance across groups/periods  
+
 - Size (bigger ≠ always better)  
+
 - Metadata (who wrote it, when, where)  
+
 - Rights and licensing
 :::
 ::: {.column width="50%"}
 **COOEE corpus:**
+
 - 319 letters, 1788–1900
+
 - Written by early immigrants to Australia  
+
 - Metadata: author, gender, origin, year, place  
+
 - Perfect for historical language analysis  
+
 - [Open access via LADAL](https://ladal.edu.au)
 :::
 :::
