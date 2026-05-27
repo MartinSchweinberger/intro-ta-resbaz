@@ -44,9 +44,9 @@ intro-ta-resbaz/
 ├── 04_speaker_guide.md         # Notes for the presenter
 └── data/
     ├── COOEE/                  # Full COOEE corpus — one .txt per letter
+    ├── COOEE.XLS               # Metadata: author, year, gender, origin, etc.
     ├── COOEE_samples/          # 20-letter sample for Track B exercises
-    ├── COOEE_metadata.xlsx     # Metadata: author, year, gender, origin, etc.
-    └── BROWN/                  # BROWN corpus for keyword reference analysis
+    └── BROWN/                  # BROWN corpus (.TXT files) for keyword analysis
 ```
 
 ---
@@ -57,8 +57,14 @@ intro-ta-resbaz/
 - **RStudio** ≥ 2023.06 — [posit.co/downloads](https://posit.co/downloads/)
 - **Quarto** ≥ 1.4 — [quarto.org](https://quarto.org) *(included with recent RStudio)*
 
-R packages (install by running the first chunk in `02_r_notebook.qmd`):
-`tidyverse`, `quanteda`, `quanteda.textstats`, `quanteda.textplots`, `readxl`, `here`, `igraph`, `ggraph`
+R packages — install by running the first chunk in `02_r_notebook.qmd`:
+
+```r
+install.packages(c(
+  "tidyverse", "quanteda", "quanteda.textstats", "quanteda.textplots",
+  "readxl", "here", "igraph", "ggraph", "ggrepel"
+))
+```
 
 ---
 
@@ -72,11 +78,20 @@ Go to **[ladal.edu.au/tools.html](https://ladal.edu.au/tools.html)**
 
 ---
 
-## The COOEE Corpus
+## The Data
 
-COOEE = *Corpus of Oz Early English* — 319 letters written by immigrants to Australia, 1788–1900. The corpus captures colonial English in private correspondence and is ideal for studying historical language use, vocabulary change, and the concerns of early settlers.
+### COOEE Corpus
+COOEE = *Corpus of Oz Early English* — letters written by immigrants to Australia, 1788–1900. Each letter is a separate `.txt` file. Metadata is in `COOEE.XLS` (skip the first row when loading — it contains group labels, not column names).
 
-**Metadata variables include:** author name, birth year, gender, origin, social status, year of writing, place of writing, addressee.
+**Key metadata columns:** `Nr` (letter ID), `Name` (author), `Birth`, `Gender...4` (author gender), `Origin`, `Age`, `Status...7` (author status), `Year Writing`, `Place Writing`, `Register`, `TextT`, `# of words`. Note that `Gender` and `Status` appear twice (once for author, once for addressee), which is why `readxl` disambiguates them with positional suffixes.
+
+### BROWN Corpus
+The BROWN corpus files use upper-case extension `.TXT`. Each line begins with a line code (e.g. `A01 0010 1`) that must be removed before analysis. The notebook handles this by extracting only letter sequences:
+
+```r
+str_extract_all("[a-zA-Z]+") |>
+  map_chr(\(words) paste(words, collapse = " "))
+```
 
 ---
 
@@ -84,11 +99,16 @@ COOEE = *Corpus of Oz Early English* — 319 letters written by immigrants to Au
 
 All methods demonstrated in this workshop have full tutorials at **[ladal.edu.au](https://ladal.edu.au)**:
 
-- [Introduction to Text Analysis: Concepts](https://ladal.edu.au/tutorials/text_analysis_intro/text_analysis_intro.html)
-- [Introduction to Text Analysis: Practical](https://ladal.edu.au/tutorials/textanalysis/textanalysis.html)
-- [Concordancing](https://ladal.edu.au/tutorials/concordancing/concordancing.html)
-- [Collocation Analysis](https://ladal.edu.au/tutorials/collocations/collocations.html)
-- [Keyword Analysis](https://ladal.edu.au/tutorials/keywords/keywords.html)
+| Method | Tutorial |
+|---|---|
+| Introduction to Text Analysis (concepts) | [ladal.edu.au/tutorials/text_analysis_intro](https://ladal.edu.au/tutorials/text_analysis_intro/text_analysis_intro.html) |
+| Introduction to Text Analysis (practical) | [ladal.edu.au/tutorials/textanalysis](https://ladal.edu.au/tutorials/textanalysis/textanalysis.html) |
+| Concordancing | [ladal.edu.au/tutorials/concordancing](https://ladal.edu.au/tutorials/concordancing/concordancing.html) |
+| Collocation Analysis | [ladal.edu.au/tutorials/collocations](https://ladal.edu.au/tutorials/collocations/collocations.html) |
+| Keyword Analysis | [ladal.edu.au/tutorials/keywords](https://ladal.edu.au/tutorials/keywords/keywords.html) |
+| Sentiment Analysis | [ladal.edu.au/tutorials/sentiment](https://ladal.edu.au/tutorials/sentiment/sentiment.html) |
+| Topic Modelling | [ladal.edu.au/tutorials/topic](https://ladal.edu.au/tutorials/topic/topic.html) |
+| Network Analysis | [ladal.edu.au/tutorials/network_analysis](https://ladal.edu.au/tutorials/network_analysis/network_analysis.html) |
 
 ---
 
